@@ -48,4 +48,4 @@ npm install && npm run dev
 
 - Le retrieval s'appuie sur `tables_metadata.yaml`, écrit pour l'entrepôt synthétique ; une autre base se rabat sur le schéma complet.
 - Analyses Pareto, BCG, RFM, EAC et détection d'anomalies : prévues, pas encore implémentées en tant que modules dédiés.
-- Qualité dépendante du modèle : la justesse du SQL, du choix des graphiques et de l'analyse dépend de l'intelligence du LLM utilisé (actuellement `openai/gpt-oss-120b` sur Groq). Un modèle plus petit produit plus d'erreurs, d'où la boucle de correction (81 % → 96 %) ; les réponses ne sont pas garanties exactes et doivent être vérifiées sur les données.
+- Qualité dépendante du modèle : la justesse du SQL, du choix des graphiques et de l'analyse dépend de l'intelligence du LLM utilisé (actuellement `openai/gpt-oss-120b` sur Groq). Un modèle plus petit produit plus d'erreurs.
