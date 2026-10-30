@@ -1,0 +1,564 @@
+# =============================================================
+#  SALL — Métadonnées sémantiques des tables
+#  Utilisé par l'agent RAG pour sélectionner les tables
+#  pertinentes à partir d'une question en langage naturel.
+# =============================================================
+
+tables:
+
+  # ─────────────────────────────────────────────────────────
+  # AGIRH — Système de Gestion des Ressources Humaines
+  # ─────────────────────────────────────────────────────────
+
+  - id: agirh_agent
+    source_system: AGIRH
+    name: agirh_agent
+    description: >
+      Table centrale des employés de l'entreprise. Contient les informations
+      personnelles et administratives de chaque agent : identité, coordonnées,
+      niveau d'études, situation familiale, salaire et date de naissance.
+      Clé de liaison universelle avec tous les autres systèmes : matricule.
+      À utiliser pour toute question sur les profils RH, les salaires,
+      la démographie, le niveau d'études, la situation matrimoniale,
+      ou pour identifier un employé précis.
+    keywords:
+      - employé
+      - agent
+      - salarié
+      - profil RH
+      - identité
+      - salaire
+      - rémunération
+      - niveau d'études
+      - bac
+      - diplôme
+      - situation matrimoniale
+      - marié
+      - célibataire
+      - sexe
+      - genre
+      - homme
+      - femme
+      - téléphone
+      - email
+      - date de naissance
+      - âge
+      - lieu de naissance
+    columns:
+      matricule:
+        type: VARCHAR
+        description: Identifiant unique de l'employé. Clé de jointure commune à tous les systèmes.
+      nom:
+        type: VARCHAR
+        description: Nom de famille de l'employé.
+      prenom:
+        type: VARCHAR
+        description: Prénom de l'employé.
+      sexe:
+        type: VARCHAR
+        description: "Genre de l'employé. Valeurs possibles : Homme, Femme."
+      email:
+        type: VARCHAR
+        description: Adresse email professionnelle de l'employé.
+      datecreationdossier:
+        type: DATE
+        description: Date à laquelle le dossier de l'employé a été créé dans le système RH. Permet de calculer l'ancienneté administrative.
+      numerotelephone:
+        type: VARCHAR
+        description: Numéro de téléphone de contact de l'employé.
+      niveauetude:
+        type: VARCHAR
+        description: "Niveau de diplôme de l'employé. Exemples de valeurs : bac+2, bac+3, bac+5, bac+7."
+      situationmatrimoniale:
+        type: VARCHAR
+        description: "Situation familiale de l'employé. Valeurs possibles : marié, célibataire, divorcé, veuf."
+      salaire:
+        type: NUMERIC
+        description: Salaire mensuel brut de l'employé en dirhams (MAD).
+      datenaissance:
+        type: DATE
+        description: Date de naissance de l'employé. Utilisée pour calculer l'âge.
+      lieunaissance:
+        type: VARCHAR
+        description: Ville ou région de naissance de l'employé.
+
+  - id: agirh_affectation
+    source_system: AGIRH
+    name: agirh_affectation
+    description: >
+      Table des affectations professionnelles des employés. Enregistre le poste,
+      le département, la région, le lieu de travail, le type de contrat et le statut
+      de chaque affectation. Permet d'analyser la répartition des employés par
+      département, poste, région ou type de contrat (CDI, intérim, temps plein).
+      Clé de liaison : matricule.
+      À utiliser pour toute question sur la structure organisationnelle,
+      les effectifs par département, les types de contrats, le télétravail,
+      ou les mutations.
+    keywords:
+      - affectation
+      - département
+      - poste
+      - fonction
+      - contrat
+      - CDI
+      - intérim
+      - temps plein
+      - région
+      - lieu de travail
+      - télétravail
+      - statut
+      - muté
+      - en mission
+      - en formation
+      - effectif
+      - organisation
+      - structure
+      - répartition
+    columns:
+      matricule:
+        type: VARCHAR
+        description: Identifiant unique de l'employé. Clé de jointure commune à tous les systèmes.
+      nom:
+        type: VARCHAR
+        description: Nom de famille de l'employé.
+      prenom:
+        type: VARCHAR
+        description: Prénom de l'employé.
+      idaffectatio:
+        type: VARCHAR
+        description: Identifiant unique de l'affectation (ex. Aff-40636).
+      departement:
+        type: VARCHAR
+        description: "Département auquel est rattaché l'employé. Exemples : Production, Finance, Logistique, RH."
+      poste:
+        type: VARCHAR
+        description: "Intitulé du poste occupé par l'employé. Exemple : Ingénieur de production, Comptable."
+      fonctionposte:
+        type: VARCHAR
+        description: "Domaine fonctionnel du poste. Exemple : Production, Gestion financière, Transport."
+      statutaffectation:
+        type: VARCHAR
+        description: "Statut actuel de l'employé dans cette affectation. Valeurs possibles : En formation, En mission, Muté, Actif."
+      dateaffectation:
+        type: DATE
+        description: Date de prise d'effet de l'affectation. Utilisée pour calculer l'ancienneté au poste.
+      typeemployee:
+        type: VARCHAR
+        description: "Type de contrat de l'employé. Valeurs possibles : CDI, Intérim, Temps plein."
+      lieutravaille:
+        type: VARCHAR
+        description: "Mode ou lieu de travail de l'employé. Exemple : Télétravail, Sur site."
+      region:
+        type: VARCHAR
+        description: "Région géographique du poste. Exemple : Casablanca-Settat, Rabat-Salé-Kénitra."
+
+  - id: agirh_conges
+    source_system: AGIRH
+    name: agirh_conges
+    description: >
+      Table des congés et absences des employés. Enregistre chaque demande
+      de congé avec son type (annuel, maladie, événement familial), ses dates,
+      sa durée et le solde initial. Permet d'analyser le taux d'absentéisme,
+      la consommation de congés, les types d'absences les plus fréquents,
+      et d'identifier les employés aux absences excessives.
+      Clé de liaison : matricule.
+      À utiliser pour toute question sur les absences, les congés maladie,
+      les congés annuels, les jours pris, le solde de congés ou l'absentéisme.
+    keywords:
+      - congé
+      - absence
+      - absentéisme
+      - arrêt maladie
+      - congé annuel
+      - événement familial
+      - jours de congé
+      - solde
+      - durée d'absence
+      - date de reprise
+      - taux d'absentéisme
+    columns:
+      matricule:
+        type: VARCHAR
+        description: Identifiant unique de l'employé. Clé de jointure commune à tous les systèmes.
+      nom:
+        type: VARCHAR
+        description: Nom de famille de l'employé.
+      prenom:
+        type: VARCHAR
+        description: Prénom de l'employé.
+      idconge:
+        type: VARCHAR
+        description: Identifiant unique de la demande de congé (ex. Cong-28426).
+      typeconge:
+        type: VARCHAR
+        description: "Nature du congé. Valeurs possibles : Congé annuel, Maladie, Événement familial, Congé sans solde."
+      datedemande:
+        type: DATE
+        description: Date à laquelle la demande de congé a été soumise.
+      datedebut:
+        type: DATE
+        description: Date de début du congé.
+      datefin:
+        type: DATE
+        description: Date de fin du congé.
+      datereprise:
+        type: DATE
+        description: Date de reprise du travail après le congé.
+      nombrejours:
+        type: INTEGER
+        description: Nombre de jours de congé pris pour cette demande.
+      soldecongeinitial:
+        type: INTEGER
+        description: Solde de congés disponible de l'employé au moment de la demande.
+
+  # ─────────────────────────────────────────────────────────
+  # iTop — Système de Gestion des Incidents et Demandes IT
+  # ─────────────────────────────────────────────────────────
+
+  - id: itop_incident
+    source_system: iTop
+    name: itop_incident
+    description: >
+      Table des incidents informatiques signalés par les employés ou détectés
+      par l'équipe IT. Contient la description de chaque incident, sa date,
+      son niveau d'urgence, sa cause racine et son statut de résolution.
+      Permet d'analyser la charge d'incidents par employé, les causes récurrentes,
+      les délais de résolution, et les incidents critiques non résolus.
+      Clé de liaison : matricule.
+      À utiliser pour toute question sur les pannes, les problèmes informatiques,
+      les incidents ouverts, le niveau d'urgence, les causes techniques ou les
+      performances de la DSI.
+    keywords:
+      - incident
+      - panne
+      - problème informatique
+      - ticket
+      - bug
+      - urgence
+      - cause racine
+      - résolution
+      - DSI
+      - IT
+      - support technique
+      - incident ouvert
+      - incident critique
+      - défaillance
+    columns:
+      idincident:
+        type: VARCHAR
+        description: Identifiant unique de l'incident (ex. Inc-34521).
+      matricule:
+        type: VARCHAR
+        description: Matricule de l'employé concerné par l'incident. Clé de jointure.
+      nom:
+        type: VARCHAR
+        description: Nom de l'employé concerné.
+      prenom:
+        type: VARCHAR
+        description: Prénom de l'employé concerné.
+      description:
+        type: VARCHAR
+        description: Description textuelle de l'incident signalé.
+      dateincident:
+        type: DATE
+        description: Date à laquelle l'incident a été déclaré.
+      dateresolution:
+        type: DATE
+        description: Date de résolution de l'incident. NULL si l'incident est toujours ouvert.
+      statut:
+        type: VARCHAR
+        description: "État actuel de l'incident. Valeurs possibles : Ouvert, En cours, Résolu, Fermé."
+      niveauurgence:
+        type: VARCHAR
+        description: "Criticité de l'incident. Valeurs possibles : Basse, Moyenne, Haute, Critique."
+      causeracine:
+        type: VARCHAR
+        description: "Cause identifiée de l'incident. Exemples : Défaillance technique, Erreur utilisateur, Autres."
+
+  - id: itop_demande
+    source_system: iTop
+    name: itop_demande
+    description: >
+      Table des demandes IT formulées par les employés. Couvre les demandes
+      de matériel, de logiciel, de congé IT ou d'accès. Chaque demande est
+      associée à un employé via le matricule, et possède une priorité et un statut.
+      Permet d'analyser la charge de demandes par employé ou par type,
+      les délais de traitement, et d'identifier les demandes en attente.
+      Clé de liaison : matricule.
+      À utiliser pour toute question sur les demandes IT, les équipements,
+      les accès, les demandes en cours ou approuvées.
+    keywords:
+      - demande IT
+      - demande de matériel
+      - demande de logiciel
+      - demande d'accès
+      - ticket IT
+      - priorité
+      - statut demande
+      - approuvé
+      - en cours
+      - charge IT
+    columns:
+      iddemande:
+        type: VARCHAR
+        description: Identifiant unique de la demande IT (ex. Dem-40161).
+      matricule:
+        type: VARCHAR
+        description: Matricule de l'employé ayant soumis la demande. Clé de jointure.
+      nom:
+        type: VARCHAR
+        description: Nom de l'employé demandeur.
+      prenom:
+        type: VARCHAR
+        description: Prénom de l'employé demandeur.
+      typedemande:
+        type: VARCHAR
+        description: "Catégorie de la demande. Exemples : Demande de matériel, Demande de congé, Demande d'accès."
+      desription:
+        type: VARCHAR
+        description: Description détaillée du besoin exprimé dans la demande.
+      datedebut:
+        type: DATE
+        description: Date de début souhaitée ou de soumission de la demande.
+      datefin:
+        type: DATE
+        description: Date de fin ou d'expiration de la demande. Peut être NULL.
+      priorite:
+        type: VARCHAR
+        description: "Niveau de priorité de la demande. Valeurs possibles : Basse, Moyenne, Haute."
+      statut:
+        type: VARCHAR
+        description: "État de traitement de la demande. Valeurs possibles : En cours, Approuvée, Rejetée, Fermée."
+
+  # ─────────────────────────────────────────────────────────
+  # MPlanner — Système de Gestion des Missions Terrain
+  # ─────────────────────────────────────────────────────────
+
+  - id: mplanner_employees
+    source_system: MPlanner
+    name: mplanner_employees
+    description: >
+      Table des employés enregistrés dans le système de gestion des missions
+      MPlanner. Contient la direction de rattachement, la fonction occupée
+      et le statut actuel de chaque employé (en mission, en congé, muté, etc.).
+      Complémentaire à agirh_affectation pour croiser le statut terrain
+      avec les informations RH.
+      Clé de liaison : matricule.
+      À utiliser pour savoir quels employés sont actuellement en mission,
+      en formation ou mutés, et pour croiser les données terrain avec les RH.
+    keywords:
+      - mission
+      - direction
+      - fonction
+      - statut terrain
+      - en mission
+      - en formation
+      - en congé
+      - muté
+      - disponibilité
+      - ressource humaine terrain
+    columns:
+      matricule:
+        type: VARCHAR
+        description: Identifiant unique de l'employé. Clé de jointure commune à tous les systèmes.
+      nom:
+        type: VARCHAR
+        description: Nom de famille de l'employé.
+      prenom:
+        type: VARCHAR
+        description: Prénom de l'employé.
+      direction:
+        type: VARCHAR
+        description: "Direction de rattachement de l'employé dans MPlanner. Exemples : Direction Financière, Direction des Ressources Humaines, Direction Générale."
+      fonction:
+        type: VARCHAR
+        description: "Intitulé de la fonction occupée. Exemples : Responsable RH, Directeur Général, Chef de projet."
+      statut:
+        type: VARCHAR
+        description: "Statut opérationnel actuel de l'employé. Valeurs possibles : En mission, En formation, En congé, Muté, Actif."
+
+  - id: mplanner_missions
+    source_system: MPlanner
+    name: mplanner_missions
+    description: >
+      Table des missions terrain effectuées par les employés. Enregistre
+      chaque mission avec sa destination, sa description, ses dates de début
+      et de fin, son type et son statut. Permet d'analyser la charge de missions
+      par employé, les destinations fréquentes, les missions en cours,
+      et la corrélation entre missions et autres indicateurs RH ou IT.
+      Clé de liaison : matricule.
+      À utiliser pour toute question sur les déplacements professionnels,
+      les missions internationales, les missions de formation,
+      la durée des missions ou la disponibilité des employés.
+    keywords:
+      - mission
+      - déplacement professionnel
+      - mission internationale
+      - mission de formation
+      - destination
+      - mission en cours
+      - durée de mission
+      - mobilité
+      - terrain
+    columns:
+      idmission:
+        type: VARCHAR
+        description: Identifiant unique de la mission (ex. Mis-61751).
+      matricule:
+        type: VARCHAR
+        description: Matricule de l'employé en mission. Clé de jointure.
+      nom:
+        type: VARCHAR
+        description: Nom de l'employé en mission.
+      prenom:
+        type: VARCHAR
+        description: Prénom de l'employé en mission.
+      destination:
+        type: VARCHAR
+        description: Lieu ou organisation de destination de la mission. Peut être une ville, un pays ou une entreprise partenaire.
+      description:
+        type: VARCHAR
+        description: Description des objectifs et du contenu de la mission.
+      datedebut:
+        type: DATE
+        description: Date de début de la mission.
+      datefin:
+        type: DATE
+        description: Date de fin prévue de la mission. NULL si la mission est en cours sans date définie.
+      typemission:
+        type: VARCHAR
+        description: "Catégorie de la mission. Valeurs possibles : Mission de formation, Mission internationale, Mission locale, Mission d'audit."
+      statutmission:
+        type: VARCHAR
+        description: "État actuel de la mission. Valeurs possibles : En cours, Terminée, Annulée, Planifiée."
+
+  # ─────────────────────────────────────────────────────────
+  # OpenProject — Système de Gestion de Projets
+  # ─────────────────────────────────────────────────────────
+
+  - id: openproject_projets
+    source_system: OpenProject
+    name: openproject_projets
+    description: >
+      Table des projets de l'entreprise gérés via OpenProject. Contient
+      les informations générales de chaque projet : titre, description,
+      dates, statut, priorité, membres de l'équipe, chef de projet
+      et pourcentage d'avancement. Permet d'analyser le portefeuille de projets,
+      les projets en retard, la répartition par priorité ou statut,
+      et la charge par chef de projet.
+      À utiliser pour toute question sur les projets, leur avancement,
+      leur statut (en cours, terminé, annulé), leur priorité,
+      ou les membres impliqués.
+    keywords:
+      - projet
+      - portefeuille de projets
+      - chef de projet
+      - avancement
+      - progression
+      - statut projet
+      - priorité projet
+      - membres équipe
+      - équipe projet
+      - en cours
+      - terminé
+      - annulé
+      - retard
+      - OpenProject
+    columns:
+      idprojet:
+        type: VARCHAR
+        description: Identifiant unique du projet (ex. Proj-20014).
+      titreprojet:
+        type: VARCHAR
+        description: Titre ou nom du projet.
+      description:
+        type: VARCHAR
+        description: Description des objectifs et du contenu du projet.
+      datedebut:
+        type: VARCHAR
+        description: Date de début du projet.
+      datefin:
+        type: VARCHAR
+        description: Date de fin prévue ou réelle du projet.
+      statut:
+        type: VARCHAR
+        description: "État actuel du projet. Valeurs possibles : En attente, En cours, Terminé, Annulé."
+      nombremembresequipe:
+        type: INTEGER
+        description: Nombre total de membres dans l'équipe du projet.
+      membreequipe:
+        type: VARCHAR
+        description: Liste des membres de l'équipe projet, séparés par des virgules.
+      chefprojet:
+        type: VARCHAR
+        description: Nom complet du chef de projet responsable.
+      priorite:
+        type: VARCHAR
+        description: "Niveau de priorité du projet. Valeurs possibles : Basse, Moyenne, Haute."
+      poucentageavencement:
+        type: VARCHAR
+        description: "Pourcentage d'avancement du projet. Exemples de valeurs : 0%, 25%, 50%, 75%, 100%."
+
+  - id: openproject_taches
+    source_system: OpenProject
+    name: openproject_taches
+    description: >
+      Table des tâches associées aux projets dans OpenProject. Chaque tâche
+      est liée à un projet via idprojet, assignée à un membre de l'équipe,
+      et dispose de dates, d'heures estimées et consommées, d'une priorité
+      et d'un pourcentage d'avancement. Permet d'analyser la charge de travail
+      individuelle, les dépassements d'heures, les tâches en retard,
+      et la performance par projet ou par personne.
+      Clé de liaison avec les projets : idprojet.
+      À utiliser pour toute question sur les tâches, les heures de travail,
+      les dépassements, la charge individuelle, ou le détail de l'avancement
+      au niveau des tâches.
+    keywords:
+      - tâche
+      - sous-tâche
+      - assigné
+      - heures estimées
+      - heures consommées
+      - dépassement
+      - charge de travail
+      - avancement tâche
+      - statut tâche
+      - productivité
+      - performance individuelle
+    columns:
+      idtache:
+        type: VARCHAR
+        description: Identifiant unique de la tâche (ex. Tache-67453).
+      idprojet:
+        type: VARCHAR
+        description: Identifiant du projet auquel appartient cette tâche. Clé de jointure avec openproject_projets.
+      titretache:
+        type: VARCHAR
+        description: Titre ou intitulé de la tâche.
+      descriptiontache:
+        type: VARCHAR
+        description: Description détaillée du travail à effectuer dans cette tâche.
+      assigne_a:
+        type: VARCHAR
+        description: Nom complet de la personne à qui la tâche est assignée.
+      datedebut:
+        type: DATE
+        description: Date de début de la tâche.
+      datefin:
+        type: DATE
+        description: Date de fin prévue de la tâche.
+      heuresestimees:
+        type: INTEGER
+        description: Nombre d'heures initialement estimées pour réaliser la tâche.
+      heuresconsomees:
+        type: INTEGER
+        description: Nombre d'heures réellement consommées sur la tâche. Permet de détecter les dépassements.
+      priorite:
+        type: VARCHAR
+        description: "Niveau de priorité de la tâche. Valeurs possibles : Basse, Moyenne, Haute."
+      pourcentageavencememt:
+        type: VARCHAR
+        description: "Pourcentage d'avancement de la tâche. Exemples : 0%, 50%, 100%."
+      statuttache:
+        type: VARCHAR
+        description: "État actuel de la tâche. Valeurs possibles : À faire, En cours, Terminé, Bloqué."

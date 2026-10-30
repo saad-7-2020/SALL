@@ -1,0 +1,11 @@
+﻿# SALL (Smart Analytical LLM) - secrets
+.env
+*.env
+!.env.example
+*.db
+chroma_sall_db/
+__pycache__/
+*.pyc
+*.bak
+node_modules/
+dist/
