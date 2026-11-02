@@ -33,9 +33,9 @@ Stack : Python, FastAPI, LangChain/LangGraph, Groq (Llama 3.3 70B), ChromaDB, SQ
 ```bash
 # Backend
 cd sall_backend
-cp .env.example .env            # renseigner les clés Groq et DB_URI
+cp .env.example .env            
 pip install -r requirements.txt
-python build_vectorstore.py     # construit l'index ChromaDB (une fois)
+python build_vectorstore.py
 uvicorn main:app --reload
 
 # Frontend
