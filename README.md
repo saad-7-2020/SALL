@@ -7,7 +7,7 @@ PostgreSQL, puis produit des graphiques et une analyse rédigée.
 ## Architecture
 
 ```
-Question ──► RAG (ChromaDB + similarité cosinus) ──► SALL-Brief ──► RAG (affinage)
+Question  ──► SALL-Brief ──► RAG (similarité cosinus)
           ──► SALL-Logic (LangGraph : génération → EXPLAIN → correction, 5 essais max, requêtes en parallèle)
           ──► SALL-Analyzer (figures Plotly / ECharts) ──► SALL-Expert (analyse en streaming, SSE)
 ```
